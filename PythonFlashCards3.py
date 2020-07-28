@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter import messagebox
 import random
 import tkinter.font as font
+import tkinter.ttk
+
 
 
 #This is the help popup
@@ -17,18 +19,18 @@ root.iconbitmap("c:/Users/jtupa/Downloads/hnet.com-image.ico")
 varx = StringVar()
 vary = StringVar()
 labelx = Label(root, textvariable=varx, anchor="e", width=10)
-labelx.grid(row=6,column=1)
+labelx.grid(row=8,column=1)
 labely = Label(root, textvariable=vary, anchor="e", width=10)
 
 #myLabel = Button(root, text="Press the start button to generate a number, then type your answer in the box and click check answer", fg="gray")
 textvar = StringVar()
 
-labely.grid(row=7,column=1)
+labely.grid(row=9,column=1)
 resultLabel = Label(root, textvariable=textvar)
-resultLabel.grid(row=8,column=1)
+resultLabel.grid(row=10,column=1)
 
 #this controls the size of the flash card box
-root.geometry("750x330")
+root.geometry("720x350")
 
 
 
@@ -100,7 +102,7 @@ def startButton():
     vary.set("+" + str(y))
     x = random.randint(bottom.get(),top.get())
     varx.set(" " + str(x))
-    answerBox.grid(row=5, column=1)
+    answerBox.grid(row=7, column=1)
 
     #multiplication
 def startButtonMult():
@@ -113,7 +115,7 @@ def startButtonMult():
     vary.set("×" + str(y))
     x = random.randint(bottom.get(),top.get())
     varx.set(" " + str(x))
-    answerBox.grid(row=5, column=1)
+    answerBox.grid(row=7, column=1)
 
     #subtraction
 def startButtonSub():
@@ -126,7 +128,7 @@ def startButtonSub():
     vary.set("-" + str(y))
     x = random.randint(bottom.get(),top.get())
     varx.set(" " + str(x))
-    answerBox.grid(row=5, column=1)
+    answerBox.grid(row=7, column=1)
     
 
 
@@ -153,6 +155,8 @@ def myClickClear():
 
 
 #these are more buttons and labels
+columnLabel = Label(root, text="   ", bg="gray27")
+
 helpButton = Button(root, text="HELP", command=popupHelp, borderwidth=2, padx=30, pady=10, fg="orange", bg="gray32")
 helpButton.grid(row=1, column=1)
 
@@ -165,17 +169,17 @@ buttonStart.grid(row=3, column=1)
 buttonStartMult = Button(root, text="START MULT", command=startButtonMult, borderwidth=2, padx=5, pady=5, fg="black", bg="gray32")
 buttonStartMult.grid(row=4, column=1)
 
-buttonStartSub = Button(root, text="START SUB", command=startButtonSub, borderwidth=2, padx=5, pady=5, fg="black", bg="gray32")
-buttonStartSub.grid(row=5, column=2)
+buttonStartSub = Button(root, text="START SUB (positive and negative)", command=startButtonSub, borderwidth=2, padx=5, pady=5, fg="black", bg="gray32")
+buttonStartSub.grid(row=5, column=1)
 
 buttonQuit = Button(root, text="QUIT", command=root.quit, borderwidth=2, padx=30, pady=10, fg="black", bg="gray32")
 buttonQuit.grid(row=3, column=3)
 
 answer1 = Label(root, text=" ",)
-answer1.grid(row=8, column=1)
+answer1.grid(row=10, column=1)
 
 checkAnswer = Button(root, text="CHECK ANSWER", command=checkAnswer, bg="gray23", borderwidth=6 )
-checkAnswer.grid(row=5, column=3)
+checkAnswer.grid(row=6, column=3, columnspan=2)
 
 
 completedString = StringVar()
