@@ -47,8 +47,8 @@ root.geometry("735x400")
 def destroy():
     answer1.config(text=" ")
 
-#winTracker = 0
 
+winTracker = 0
 x = 0
 y = 0
 
@@ -58,35 +58,36 @@ answerTracker = 0
 #This is the "correct"/"incorrect" (for addition, subtraction and multiplication)
 def checkAnswer():
     global answerTracker, completedString
+    global winTracker, correctlyCompletedString
+
+    answerTracker=answerTracker + 1
+    completedString.set("you have completed " +str(answerTracker)+" equations")
+    isItCorrect = False
     try:
         result = int(answerBox.get())
-        if result==x+y:
+        if whatAreWeDoing == 1: # addition
+            isItCorrect = result==x+y
+        elif whatAreWeDoing == 2: # subtraction
+            isItCorrect = result == x - y
+        elif whatAreWeDoing == 3: # mutliplication
+            isItCorrect = result == x * y
+
+        if isItCorrect:
+            if whatAreWeDoing == 1: # addition
+                startButton()
+            elif whatAreWeDoing == 2: # subtraction
+                startButtonSub()
+            elif whatAreWeDoing == 3: # mutliplication
+                startButtonMult()
+            winTracker = winTracker + 1
             answer1.config(text="Coooorect!")
-            answerBox.delete(0, "end")
-            answer1.after(3000, destroy)
-            answerTracker=answerTracker + 1
-            #winTracker=winTracker + 1
-            completedString.set("you have completed " +str(answerTracker)+" equations")
-        elif result==x*y:
-            answer1.config(text="coooorect!")
-            answerBox.delete(0, "end")
-            answer1.after(3000, destroy)
-            answerTracker=answerTracker + 1
-            #winTracker=winTracker + 1
-            completedString.set("you have completed " +str(answerTracker)+" equations")
-        elif result==x-y:
-            answer1.config(text="coooorect!")
-            answerBox.delete(0, "end")
-            answer1.after(3000, destroy)
-            answerTracker=answerTracker + 1
-            #winTracker=winTracker + 1
-            completedString.set("you have completed " +str(answerTracker)+" equations")
         else:
             answer1.config(text="incorrect.")
-            answerBox.delete(0, "end")
-            answer1.after(3000, destroy)
-            answerTracker=answerTracker + 1
-            completedString.set("you have completed " +str(answerTracker)+" equations")
+
+        answerBox.delete(0, "end")
+        answer1.after(3000, destroy)
+
+        correctlyCompletedString.set("you have correctly solved " + str(winTracker)+" equations")
 
     except ValueError:
         answer1.config(text="Type in a number")
@@ -107,13 +108,19 @@ answerBox = Entry(root, text="Enter your answer here.", validatecommand=checkAns
 bottom = IntVar()
 top = IntVar()
 
+# 1 - addition
+# 2 - subtraction
+# 3 - multiplication
+whatAreWeDoing = 0
+
 #startBox makes the entry(Entry) appear after you press the start button (for addition subtraction and multiplication)
 def startButton():
     answer1.config(text=" ")
-    global x
+    global x, whatAreWeDoing
     global bottom
     global top
     global y
+    whatAreWeDoing = 1
     y = random.randint(bottom.get(),top.get())
     vary.set("+" + str(y))
     x = random.randint(bottom.get(),top.get())
@@ -123,39 +130,37 @@ def startButton():
     #multiplication
 def startButtonMult():
     answer1.config(text=" ")
-    global x
+    global x, whatAreWeDoing
     global bottom
     global top
     global y
+    whatAreWeDoing = 3
     y = random.randint(bottom.get(),top.get())
     vary.set("×" + str(y))
     x = random.randint(bottom.get(),top.get())
     varx.set(" " + str(x))
     answerBox.grid(row=7, column=1)
 
-    #subtraction
 def startButtonSub():
     answer1.config(text=" ")
-    global x
+    global x, whatAreWeDoing
     global bottom
     global top
     global y
-    y = random.randrange(0, top.get)
-    vary.set("-" + str(y))
-    x = random.randrange(0, y)
+    whatAreWeDoing = 2
+    x = random.randrange(bottom.get(), top.get())
+    y = random.randrange(bottom.get(), x)
     varx.set(" " + str(x))
+    vary.set("-" + str(y))
     answerBox.grid(row=7, column=1)
-    
-
-
-
     
     #textvar.set(x+y)
     #Heres the thing that checks if the minimum is larger than the max number
 answer = Entry(root)
 
 def fixup():
-    if top.get() < bottom.get():
+    # if we're subtracting, make sure result is positive
+    if top.get() < bottom.get() and whatAreWeDoing == 2:
         prevTop = top.get()
         top.set(bottom.get())
         bottom.set(prevTop)
@@ -170,17 +175,10 @@ mx1 = Radiobutton(root, text="Min number: 1", variable=bottom, value=1).grid(row
 mx10 = Radiobutton(root, text="Min number: 10", variable=bottom, command=fixup, value=10).grid(row=12, column=2)
 mx100 = Radiobutton(root, text="Min number: 100", variable=bottom, command=fixup, value=100).grid(row=12, column=3)
 
-def startButtonSub():
-    answer1.config(text=" ")
-    global x
-    global bottom
-    global top
-    global y
-    x = random.randrange(bottom.get(), top.get())
-    y = random.randrange(bottom.get(), x)
-    varx.set(" " + str(x))
-    vary.set("-" + str(y))
-    answerBox.grid(row=7, column=1)
+#subtraction
+
+
+
 
 #top and botton are parts of x and y im  using for my radio buttons
 top.set(100)
@@ -229,8 +227,9 @@ answer1.grid(row=10, column=1)
 checkAnswer = Button(root, text="CHECK ANSWER", command=checkAnswer, bg="gray23", borderwidth=6 )
 checkAnswer.grid(row=6, column=3, columnspan=2)
 
-#winTracker = Label(root, text="You have gotten " +str(winTracker)+ " equations correct") 
-#winTracker.grid(row=14, column=1)
+correctlyCompletedString = StringVar()
+winLabel = Label(root, textvariable = correctlyCompletedString)
+winLabel.grid(row=16, column=1)
 
 completedString = StringVar()
 status = Label(root, textvariable = completedString)
